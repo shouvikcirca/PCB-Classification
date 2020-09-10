@@ -1,0 +1,45 @@
+conda environment name: pcbshouvik
+To activate: conda activate pcbshouvik
+To deactivate: conda deactivate
+env data storage location: /home/lenovo13/anaconda3/pcbshouvik
+
+
+Type1/01_PD19A01092-355_2
+BC:229
+FC:713
+
+
+Type1/01_PD19A01092-355
+BC:1750
+FC:5603
+
+Type1
+BC: 1979
+FC: 6316
+
+FC:BC = 3
+
+Type2/AFVI1_K19109X3_01PD19A01367359
+BC:2488
+FC:8086
+
+
+Type2/AFVI1_K19109X3_01PD19A01831359
+BC:2747
+FC:6783
+
+
+Type2/AFVI1_K19109X3_01PD19A01833359
+BC:984
+FC:2966
+
+
+Type2/AFVI1_K19109X3_01PD19A02070355
+BC:1991
+FC:4712
+
+Type2
+BC: 8210
+FC: 22547
+
+
