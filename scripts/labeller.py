@@ -2,7 +2,6 @@ import os
 
 print('Enter Filename')
 fname = input()
-allimages = os.listdir('../allimages/')
 
 
 f = open(fname,'r')
@@ -11,20 +10,18 @@ f.close()
 
 csvfilename = fname[:-4]+'.csv'
 
-f = open(csvfilename,'a')
-for i in range(len(paths)):
-    nstr=''
+nstr = ''
+for i in range(3):
     print(paths[i])
-    for ims in allimages:
-        if paths[i] == ims:
-            os.system('eog ../allimages/'+ims)
+    os.system('eog ../allimages/'+paths[i])
     nstr+=(paths[i]+',')
     nstr = nstr + input()  # D or ND
     nstr+=','
     nstr = nstr + input()  # C or NC
     nstr+='\n'
-    f.write(nstr)
 
+f = open(csvfilename,'a')
+f.write(nstr)
 f.close()
 
 print('Data written to {}'.format(csvfilename))
