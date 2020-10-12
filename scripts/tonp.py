@@ -28,3 +28,4 @@ def tonp(rdir, target):
 
 if __name__ == "__main__":
     tonp('False', 0)
+    tonp('True',1)
