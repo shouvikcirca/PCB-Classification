@@ -1,0 +1,48 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+NAME_TO_FUNC	randaugment.py	/^NAME_TO_FUNC = {$/;"	v
+_MAX_LEVEL	randaugment.py	/^_MAX_LEVEL = 10.$/;"	v
+_apply_func_with_prob	randaugment.py	/^def _apply_func_with_prob(func, image, args, prob):$/;"	f
+_enhance_level_to_arg	randaugment.py	/^def _enhance_level_to_arg(level):$/;"	f
+_parse_policy_info	randaugment.py	/^    def _parse_policy_info(name, prob, level, replace_value, augmentation_hparams):$/;"	f	function:level_to_arg
+_randomly_negate_tensor	randaugment.py	/^def _randomly_negate_tensor(tensor):$/;"	f
+_rotate_level_to_arg	randaugment.py	/^def _rotate_level_to_arg(level):$/;"	f
+_shear_level_to_arg	randaugment.py	/^def _shear_level_to_arg(level):$/;"	f
+_shrink_level_to_arg	randaugment.py	/^def _shrink_level_to_arg(level):$/;"	f
+_translate_level_to_arg	randaugment.py	/^def _translate_level_to_arg(level, translate_const):$/;"	f
+autocontrast	randaugment.py	/^def autocontrast(image):$/;"	f
+blend	randaugment.py	/^def blend(image1, image2, factor):$/;"	f
+brightness	randaugment.py	/^def brightness(image, factor):$/;"	f
+build_and_apply_nas_policy	randaugment.py	/^def build_and_apply_nas_policy(policies, image,$/;"	f
+build_lut	randaugment.py	/^    def build_lut(histo, step):$/;"	f	function:equalize.scale_channel
+color	randaugment.py	/^def color(image, factor):$/;"	f
+contrast	randaugment.py	/^def contrast(image, factor):$/;"	f
+cutout	randaugment.py	/^def cutout(image, pad_size, replace=0):$/;"	f
+distort_image_with_autoaugment	randaugment.py	/^def distort_image_with_autoaugment(image, augmentation_name):$/;"	f
+distort_image_with_randaugment	randaugment.py	/^def distort_image_with_randaugment(image, num_layers, magnitude):$/;"	f
+equalize	randaugment.py	/^def equalize(image):$/;"	f
+final_policy	randaugment.py	/^        def final_policy(image_):$/;"	f	function:build_and_apply_nas_policy.make_final_policy
+invert	randaugment.py	/^def invert(image):$/;"	f
+level_to_arg	randaugment.py	/^def level_to_arg(hparams):$/;"	f
+make_final_policy	randaugment.py	/^    def make_final_policy(tf_policy_):$/;"	f	function:build_and_apply_nas_policy
+policy_v0	randaugment.py	/^def policy_v0():$/;"	f
+policy_vtest	randaugment.py	/^def policy_vtest():$/;"	f
+posterize	randaugment.py	/^def posterize(image, bits):$/;"	f
+rotate	randaugment.py	/^def rotate(image, degrees, replace):$/;"	f
+scale_channel	randaugment.py	/^  def scale_channel(im, c):$/;"	f	function:equalize
+scale_channel	randaugment.py	/^  def scale_channel(image):$/;"	f	function:autocontrast
+scale_values	randaugment.py	/^    def scale_values(im):$/;"	f	function:autocontrast.scale_channel
+select_and_apply_random_policy	randaugment.py	/^def select_and_apply_random_policy(policies, image):$/;"	f
+sharpness	randaugment.py	/^def sharpness(image, factor):$/;"	f
+shear_x	randaugment.py	/^def shear_x(image, level, replace):$/;"	f
+shear_y	randaugment.py	/^def shear_y(image, level, replace):$/;"	f
+solarize	randaugment.py	/^def solarize(image, threshold=128):$/;"	f
+solarize_add	randaugment.py	/^def solarize_add(image, addition=0, threshold=128):$/;"	f
+translate_x	randaugment.py	/^def translate_x(image, pixels, replace):$/;"	f
+translate_y	randaugment.py	/^def translate_y(image, pixels, replace):$/;"	f
+unwrap	randaugment.py	/^def unwrap(image, replace):$/;"	f
+wrap	randaugment.py	/^def wrap(image):$/;"	f
