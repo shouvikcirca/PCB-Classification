@@ -2,13 +2,13 @@ from tkinter import *
 from tkinter.filedialog import *
 from tkinter import ttk
 from PIL import ImageTk, Image
-from Models.models import densenet
-from keras.preprocessing.image import load_img, img_to_array
+#from Models.models import densenet
+#from keras.preprocessing.image import load_img, img_to_array
 import numpy as np
 
 
-print('Loading model')
-model = densenet(201)
+#print('Loading model')
+#model = densenet(201)
 
 root = Tk()
 root.title('Image Classifier')
@@ -16,9 +16,10 @@ root.title('Image Classifier')
 def load1():
     f1 = askopenfilename(title = 'open').split('/')[-1]
     print(f1)
-    loadedim = np.expand_dims(img_to_array(load_img(f1))/255.,axis = 0)
-    pred = (model.predict(loadedim)>=0.5).astype('int32').reshape(-1)[0]
-    print(pred)
+    #loadedim = np.expand_dims(img_to_array(load_img(f1))/255.,axis = 0)
+    #pred = (model.predict(loadedim)>=0.5).astype('int32').reshape(-1)[0]
+    #print(pred)
+    pred = 1
     c = StringVar()
     if pred == 0:
         c.set('Non Defective')
@@ -36,10 +37,15 @@ def load1():
 mynotebook = ttk.Notebook(root)
 myframe1 = Frame(mynotebook)
 myframe2 = Frame(mynotebook)
+myframe3 = Frame(mynotebook)
+
 mynotebook.add(myframe1,text='Solo')
 mynotebook.add(myframe2,text='Group')
+mynotebook.add(myframe3,text='Show Results')
 
 Button(myframe1, text = 'Choose Image', command = load1).grid(row = 0, column = 0)
+Button(myframe2, text = 'Select Folder').grid(row = 0, column = 0)
+
 
 for child in root.winfo_children():
     child.grid_configure(padx = 10, pady = 10)
