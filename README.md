@@ -20,4 +20,5 @@ Upsampled minority class by augmenting with horizontal flip.
 
 Also Tried training an autoencoder for dimensionality reduction. Dataset not fitting in memory.
 
-
+Note#
+Data Augmentation is a technique to explicitly encode invariance into a ML model.

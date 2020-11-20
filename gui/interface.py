@@ -10,7 +10,8 @@ import os
 #print('Loading model')
 #model = densenet(201)
 
-
+class E(Exception):
+    pass
 
 root = Tk()
 root.title('Image Classifier')
@@ -60,21 +61,24 @@ def load1():
 def loadfolder():
     global dpreds
     global ndpreds
+  
+    try:
+        f1 = askopenfilename(title = 'open').split('/')[:-1]
+        f1 = '/'.join(f1)
+        ims = os.listdir(f1)
+        dlist = [];ndlist = [];
+        for i in range(len(ims)):
+            if np.random.randint(2) == 0:
+                dlist.append(ims[i])
+            else:
+                ndlist.append(ims[i])
 
-    f1 = askopenfilename(title = 'open').split('/')[:-1]
-    f1 = '/'.join(f1)
-    ims = os.listdir(f1)
-    dlist = [];ndlist = [];
-    for i in range(len(ims)):
-        if np.random.randint(2) == 0:
-            dlist.append(ims[i])
-        else:
-            ndlist.append(ims[i])
+        dpreds = dlist
+        ndpreds = ndlist
+        delPreds()
 
-    dpreds = dlist
-    ndpreds = ndlist
-    #dpreds = 'Defective\n\n'+'\n'.join(dlist)
-    #ndpreds = 'NonDefective\n\n'+'\n'.join(ndlist)
+    except AttributeError:
+        print('Folder Not Selected')
 
 
 def showPredictions():

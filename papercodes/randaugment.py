@@ -513,8 +513,7 @@ def level_to_arg(hparams):
             # pylint:enable=g-long-lambda
             }
 
-
-    def _parse_policy_info(name, prob, level, replace_value, augmentation_hparams):
+def _parse_policy_info(name, prob, level, replace_value, augmentation_hparams):
         """Return the function that corresponds to `name` and update `level` param."""
   func = NAME_TO_FUNC[name]
   args = level_to_arg(augmentation_hparams)[name](level)
@@ -669,16 +668,23 @@ def distort_image_with_randaugment(image, num_layers, magnitude):
           'Solarize', 'Color', 'Contrast', 'Brightness', 'Sharpness',
           'ShearX', 'ShearY', 'TranslateX', 'TranslateY', 'Cutout', 'SolarizeAdd']
 
-  for layer_num in range(num_layers):
+  for layer_num in range(num_layers): 
+      
       op_to_select = tf.random_uniform(
-              [], maxval=len(available_ops), dtype=tf.int32)
-      random_magnitude = float(magnitude)
+              [], maxval=len(available_ops), dtype=tf.int32) #Select an operation randomly
+      
+      random_magnitude = float(magnitude) # magnitude received as function argument
+
     with tf.name_scope('randaug_layer_{}'.format(layer_num)):
-        for (i, op_name) in enumerate(available_ops):
-            prob = tf.random_uniform([], minval=0.2, maxval=0.8, dtype=tf.float32)
-        func, _, args = _parse_policy_info(op_name, prob, random_magnitude,
+
+        for (i, op_name) in enumerate(available_ops): # For each operation
+            prob = tf.random_uniform([], minval=0.2, maxval=0.8, dtype=tf.float32) # Choose a random probability
+
+            func, _, args = _parse_policy_info(op_name, prob, random_magnitude,
                 replace_value, augmentation_hparams)
-        image = tf.cond(
+
+
+            image = tf.cond(
                 tf.equal(i, op_to_select),
                 # pylint:disable=g-long-lambda
                 lambda selected_func=func, selected_args=args: selected_func(
