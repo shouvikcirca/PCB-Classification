@@ -22,3 +22,8 @@ Also Tried training an autoencoder for dimensionality reduction. Dataset not fit
 
 Note#
 Data Augmentation is a technique to explicitly encode invariance into a ML model.
+
+With 1794 samples in training set, takes about 1600 seconds per epoch
+
+
+Decided to try cutmix augmentation.

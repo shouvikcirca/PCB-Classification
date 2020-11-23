@@ -6,9 +6,20 @@ import io
 from PIL import Image as pil_image
 import torch
 from torchvision import datasets, transforms
+import torch.nn as nn
+import torch.nn.functional as F
+from collections import OrderedDict
 
 
-"""
+model = torch.nn.Sequential(OrderedDict([
+                ('conv_base',torch.hub.load('pytorch/vision:v0.6.0', 'densenet201', pretrained=True).features[:-1]),
+                ('globalavgpool',torch.nn.AvgPool2d(kernel_size = 7)),
+                ('flatten',torch.nn.Flatten()),
+                ('lastlinear',torch.nn.Linear(1920,2))
+            ])
+        )
+
+
 def rand_bbox(size, lam):
     W = size[2]
     H = size[3]
@@ -28,16 +39,16 @@ def rand_bbox(size, lam):
     return bbx1, bby1, bbx2, bby2
 
 
-def train():
+def train(model):
     train_transforms = transforms.Compose([
         transforms.Resize(256),
-        transforms.ToTensor()
+        transforms.ToTensor(),
         ])
 
     train_data = datasets.ImageFolder(
-        'randimages',
+        'randimages/train',
         transform = train_transforms
-     )
+    )
 
     #print(train_data.class_to_idx)
 
@@ -47,51 +58,60 @@ def train():
         shuffle = True
     )
 
+    val_loader = torch.utils.data.DataLoader(
+        datasets.ImageFolder('randimages/val', transforms.Compose([
+            transforms.Resize(256),
+            transforms.ToTensor(),
+            ])),
+        batch_size = 231,
+    )
+
     criterion = nn.CrossEntropyLoss().cuda()
     optimizer = torch.optim.Adam(model.parameters(), lr = 0.001)
-
     epochs = 2
+
+    
     for i in range(epochs):
+        model.train()
         for images, labels in trainloader:
+            images/=255.
             r = np.random.rand(1)
             if r<0.5:
-                randindex = torch.randperm(images.shape[0])
-                target_a = target
-                target_b = target[rand_index]
+                rand_index = torch.randperm(images.shape[0])
+                target_a = labels
+                target_b = labels[rand_index]
                 lam = np.random.beta(1, 1)
                 bbx1, bby1, bbx2, bby2 = rand_bbox(images.size(), lam)
-                images[:,:,bbx1:bbx2,bby1:bby2] = images[randindex,:,bbx1:bbx2,bby1:bby2]
+                images[:,:,bbx1:bbx2,bby1:bby2] = images[rand_index,:,bbx1:bbx2,bby1:bby2]
                 lam = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (images.size()[-1] * images.size()[-2]))
                 output = model(images)
                 loss = criterion(output, target_a) * lam + criterion(output, target_b) * (1. - lam)
+                print('train loss:{}'.format(loss), end = ' ')
             else:
-                output = model(input)
+                output = model(images)
                 loss = criterion(output, target)
+                print('train loss:{}'.format(loss), end = ' ')
 
         optimizer.zero_grad()
         loss.backward()
         optimizer.step() 
-"""        
-a = torch.randn(1,3,224,224)
-model = torch.hub.load('pytorch/vision:v0.6.0', 'densenet121', pretrained=True)
+
+        #Validation
+        model.eval()
+        for images, labels in val_loader:
+            images/=255.
+            op = model(images)
+            val_loss = criterion(op,labels)
+            print('val loss:{}'.format(val_loss))
+    
 
 
-for name,child in model.named_children():
-    print(child)
+train(model)
 
 """
 print(model.classifier.in_features) 
 print(model.classifier(a).shape)
 """
-
-
-
-
-
-
-
-
-
 """
 img = 'a'
 with open('10.tif', 'rb') as f:
@@ -103,9 +123,7 @@ img.show()
 from tensorflow.keras.preprocessing.image import img_to_array
 imgnp = img_to_array(img)
 print(imgnp.shape)
-
-
-#print(img.mode)
+print(img.mode)
 """
 
 
