@@ -27,3 +27,11 @@ With 1794 samples in training set, takes about 1600 seconds per epoch
 
 
 Decided to try cutmix augmentation.
+
+Note
+The problem with having an imbalanced dataset in a binary classification task is that
+it is not that the model is learning the discriminative features of the majority class well.
+Actually, it is badly learning the discriminative features of the minority class.
+Because we have only two classes, failure to identify a sample as belonging to one class(minority)
+automatically classifies it to be a sample of the other class(majority class). So there is a very heavy bias
+towards the majority class.
