@@ -35,3 +35,8 @@ Actually, it is badly learning the discriminative features of the minority class
 Because we have only two classes, failure to identify a sample as belonging to one class(minority)
 automatically classifies it to be a sample of the other class(majority class). So there is a very heavy bias
 towards the majority class.
+
+
+---Augmix-----
+Further, networks trained on translation augmentations remain highly sensitive to images shifted by a single pixel
+Benchmarking Neural Network Robustness to Common Corruptions and Perturbations(Dan Hendrycks, Thomas Dietterich)
