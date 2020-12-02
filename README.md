@@ -1,6 +1,5 @@
 # Imbalanced-Classification
 
-
 Tried 3fold validation using Densenet 121
 . High NonDefective Accuracy
 . Low NonDefective Accuracy
@@ -40,3 +39,12 @@ towards the majority class.
 ---Augmix-----
 Further, networks trained on translation augmentations remain highly sensitive to images shifted by a single pixel
 Benchmarking Neural Network Robustness to Common Corruptions and Perturbations(Dan Hendrycks, Thomas Dietterich)
+
+
+---SimCLR------
+To evaluate the learned representations, we follow the widely used
+linear evaluation protocol
+
+
+Random Cropping might not be helpful as it might exclude the defect mark and that could lead to class inversion.
+

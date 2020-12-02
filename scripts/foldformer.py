@@ -64,8 +64,6 @@ def createFolds(folds):
     
 
 
-
-
 if __name__ == '__main__':
     os.mkdir('Test')
     createSegs('False',3)
