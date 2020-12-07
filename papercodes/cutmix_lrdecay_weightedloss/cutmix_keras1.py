@@ -10,13 +10,13 @@ from keras.preprocessing.image import ImageDataGenerator, NumpyArrayIterator
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from sklearn.metrics import confusion_matrix
 from keras import models, layers, optimizers
-from Models.models import densenet as dns
+from Models.models import densenetsoftmax as dns
 import keras.backend as K
 import math
 from datetime import datetime
 from keras.preprocessing.image import load_img, img_to_array, array_to_img
 from keras.callbacks import LearningRateScheduler
-
+from keras.utils import to_categorical
 
 np.random.seed(123)
 
@@ -107,6 +107,7 @@ class DataGenerator(keras.utils.Sequence):
             y = (lam * y) + ((1 - lam)*  y[rand_index])
         
         X/=255.
+        y = to_categorical(y)
         return X, y#tensorflow.keras.utils.to_categorical(y, num_classes=self.n_classes)
 
     
@@ -122,7 +123,7 @@ class DataGenerator(keras.utils.Sequence):
 
 
 
-trainbatchsize = 34
+trainbatchsize = 2
 params = {'dim': (600,600),'batch_size': trainbatchsize,'n_channels': 3,'shuffle': True}
 training_generator = DataGenerator(partition['train'], labels, **params)
 
@@ -174,7 +175,18 @@ my_callbacks = [
 
 
 model = dns()
-model.compile(optimizer = optimizers.Adam(lr = 0.01),loss = 'binary_crossentropy',metrics = ['accuracy'])
+
+def custom_loss(ypred, ytrue):
+    falses = (np.argmax(ytrue, axis = 1) == 0).sum()
+    trues = (np.argmax(ytrue, axis = 1) == 1).sum()
+    loss = K.square(ypred - ytrue)
+    weights = [falses/trues, trues/falses]
+    loss = loss * weights
+    loss = K.sum(loss, axis = 1)
+    return loss
+
+
+model.compile(optimizer = optimizers.Adam(lr = 0.01),loss = custom_loss, ,metrics = ['accuracy'])
 history = model.fit_generator(
     training_generator,
     epochs = 400,
