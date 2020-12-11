@@ -139,12 +139,33 @@ for i in range(epochs):
 		samples = samples.cpu();del samples;
 		pred = pred.cpu();del pred;
 		labels = labels.cpu();del labels;
-		pbar.set_postfix(trainloss = trainloss.item())
-		pbar.update(trainbatchsize)
-	
-	trainlossrecord.append(trainloss.item())
-	model = model.cpu()
+		pbar.update(trainbatchsize//2)
+
+
 	model = model.eval()
+	train_gt = torch.Tensor([]).int()
+	train_pred = torch.Tensor([]).int()
+
+	totaltrainloss = 0.
+	for samples, labels in trainloader:
+		samples = samples.cuda()
+		labels = labels.numpy().astype('int32')
+		labels = torch.from_numpy(np.eye(2)[labels].astype('float32')).cuda()
+
+		with torch.no_grad():
+			pred = F.log_softmax(model(samples), dim=1)
+			train_pred = torch.cat([train_pred, torch.argmax(pred, dim=1).int().cpu()])
+			train_gt = torch.cat([train_gt, torch.argmax(labels, dim=1).int().cpu()])
+			totaltrainloss+=compound_dice_loss(pred, labels, 'cpu')
+		
+		samples = samples.cpu();del samples;
+		pred = pred.cpu();del pred;
+		labels = labels.cpu();del labels;
+		pbar.update(trainbatchsize//2)
+		
+
+	pbar.set_postfix(trainloss = totaltrainloss.item())	
+	trainlossrecord.append(totaltrainloss.item())
 
 	valacc = 0.;
 	valloss = 0.;
@@ -153,14 +174,15 @@ for i in range(epochs):
 
 	tbar = tqdm(total = validationsetsize)
 	for samples, labels in validationloader:
+		samples = samples.cuda()
 		labels = labels.numpy().astype('int32')
-		labels = torch.from_numpy(np.eye(2)[labels].astype('float32'))#.cuda()
+		labels = torch.from_numpy(np.eye(2)[labels].astype('float32')).cuda()
 		
 		with torch.no_grad():	
 			pred = F.log_softmax(model(samples), dim = 1)
 		
-			val_pred = torch.cat([val_pred,torch.argmax(pred, dim=1).int()])
-			val_gt = torch.cat([val_gt,torch.argmax(labels, dim = 1).int()])
+			val_pred = torch.cat([val_pred,torch.argmax(pred, dim=1).int().cpu()])
+			val_gt = torch.cat([val_gt,torch.argmax(labels, dim = 1).int().cpu()])
 
 			valloss+=compound_dice_loss(pred, labels, 'cpu')
 		
@@ -175,7 +197,7 @@ for i in range(epochs):
 	tp,fp,tn,fn = getMetrics(val_gt.int(),val_pred.int(), 0 ,1)
 	valacc = (tp+tn)/(tp+fp+tn+fn)
 	valaccrecord.append(valacc)	
-	pbar.set_postfix(epoch = i, train_loss = trainloss.item(), val_loss = valloss.item(), val_acc = valacc)
+	pbar.set_postfix(epoch = i, train_loss = totaltrainloss.item(), val_loss = valloss.item(), val_acc = valacc)
 	pbar.close()
 
 	if valloss < minvalloss:
