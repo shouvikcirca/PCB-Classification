@@ -48,5 +48,20 @@ linear evaluation protocol
 
 Random Cropping might not be helpful as it might exclude the defect mark and that could lead to class inversion.
 
+<<<<<<< Updated upstream
 cmpth_checkpoints/exp2 was a mistake. Have to swap falseratio and trueratio.The ratio should be such that it magnifies
 the minority-samples-class pred value and shrinks teh majority-samples-class pred value. In exp2 I did the opposite.
+=======
+
+
+Looking at Defective and Non Defective Precision and Recall values in the results, one trens is emergent.
+A lot of defective samples are being misclassiied as Non Defective. Owing to this, the defective precision is high
+and defective precision is low. Because the number of false negatives is larger compared to number of false positives.
+
+Due to the same reason, the result for non defective class is exactly opposite. Because in this case the number of false positives 
+becomes larger than the number of false negatives.Thus Non Defective Precision values are lower and Non Defective Recall
+values are higher.
+
+
+Not a lot of difference when using Adam Optimizer and using training method described in densenet paper(without using mentioned initialization)
+>>>>>>> Stashed changes
