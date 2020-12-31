@@ -48,3 +48,5 @@ linear evaluation protocol
 
 Random Cropping might not be helpful as it might exclude the defect mark and that could lead to class inversion.
 
+cmpth_checkpoints/exp2 was a mistake. Have to swap falseratio and trueratio.The ratio should be such that it magnifies
+the minority-samples-class pred value and shrinks teh majority-samples-class pred value. In exp2 I did the opposite.
