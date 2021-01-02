@@ -20,7 +20,8 @@ np.random.seed(0)
 
 f = 1
 
-rootdir = 'dataset/6000samples/fold{}'.format(f)+'/'
+rootdir = 'randimages/'
+#rootdir = 'dataset/6000samples/fold{}'.format(f)+'/'
 
 trainsetsize = len(os.listdir(rootdir + 'Train/True')) + len(os.listdir(rootdir + 'Train/False'))
 validationsetsize = len(os.listdir(rootdir + 'Validation/True')) + len(os.listdir(rootdir + 'Validation/False'))
@@ -56,23 +57,6 @@ for samples, labels in traindata_mean_std_loader:
 
 ##########################################################################################
 
-class 
-
-preprocess = transforms.Compose([
-	transforms.ToTensor(),
-	transforms.Normalize(trainmean, trainstd)])
-
-train_dataset = datasets.ImageFolder(
-	rootdir + 'Train',
-)
-	
-
-
-
-
-
-
-
 ############################ AUGMIX #####################
 def normalize(image):
 	image = image.transpose(2, 0, 1)
@@ -88,21 +72,67 @@ def apply_op(image, op, severity):
 	return np.asarray(pil_img)/255.
 
 
-def augment_and_mix(image, severity = 3, width = 3, depth = -1, alpha = 1.):
+def aug(image, severity = 3, width = 3, depth = -1, alpha = 1.):
 	ws = np.float32(np.random.dirichlet([alpha] * width))
 	m = np.float32(np.random.beta(alpha, alpha))
 	mix = np.zeros_like(image)
+        auglist = augmentations.augmentations
 	for i in range(width):
 		image_aug = image.copy()
 		d = depth if depth>0 else np.random.randint(1, 4)
 		for _ in range(d):
-			op = np.random.choice(augmentations.augmentations)
+			op = np.random.choice(auglist)
 			image_aug = apply_op(image_aug, op, severity)
 		mix+=ws[i] * normalize(image_aug)
 	
 	mixed  = (1 - m)*normalize(image) + m*mix
 	return mixed
+
+
 #########################################################
+
+
+class AugMixDataset(torch.utils.data.Dataset):
+    def __init__(self, dataset, preprocess):
+        self.dataset = dataset
+        self.preprocess = preprocess
+
+
+    def __getitem__(self, i):
+        x, y = self.dataset[i]
+        im_tuple = (self.preprocess(x), aug(x, self.preprocess), aug(x, self.preprocess))
+        return im_tuple, y
+
+    def __len__(self):
+        return len(self.dataset)
+
+
+preprocess = transforms.Compose([
+	transforms.Resize(size = (256,256), interpolation = 4),
+	transforms.ToTensor(),
+	transforms.Normalize(trainmean, trainstd)])
+
+train_dataset = datasets.ImageFolder(
+	rootdir + 'Train',
+)
+
+train_dataset = AugMixDataset(train_dataset, preprocess)
+train_loader = torch.utils.data.DataLoader(
+        train_dataset,
+        batch_size = trainbatchsize,
+        shuffle = True
+) 
+
+validation_dataset = dataset.ImageFolder(
+        rootdir + 'Validation',
+)
+
+validation_loader = torch.utils.data.DataLoader(
+        validation_dataset,
+        batch_size = validationbatchsize,
+        shuffle = False
+)
+
 
 
 class Model(nn.Module):
@@ -136,7 +166,6 @@ optimizer = torch.optim.Adam(
 	lr = 0.01, 
 )
 
-#scheduler = StepLR(optimizer, step_size = 75, gamma = 0.1)
 
 
 epochs = 400
@@ -148,78 +177,36 @@ nlogloss = nn.NLLLoss()
 
 for i in range(epochs):
 	model.train()
-	#scheduler.step()
 
 	pbar = tqdm(total = trainsetsize)
-	for samples, labels in trainloader:
-		optimizer.zero_grad()
-		#labels = labels.numpy().astype('int32')
-		#labels = torch.from_numpy(np.eye(2)[labels].astype('float32')).cuda()
-		
-		r = np.random.rand(1)
-		if r<0.5:
-			lam = 0.5
-			rand_index = np.random.permutation(samples.shape[0])
-			bbx1, bby1, bbx2, bby2 = rand_bbox(samples.shape, lam)
-			samples = samples.numpy()
-			samples[:,:,bbx1:bbx2,bby1:bby2] = samples[rand_index,:,bbx1:bbx2,bby1:bby2]
-			samples = torch.from_numpy(samples)
+        for i, (images, targets) in enumerate(train_loader):
+                print(type(images))
+                print(type(targets))
 
-		r = np.random.rand(1)
-		if r<0.5:
-			noise_factor = 0.5
-			samples = samples.numpy()
-			samples[::]+=(noise_factor * np.random.normal(loc = 0.0, scale = 1.0, size = samples.shape))
-			samples = torch.from_numpy(samples)
-			
-
-		samples = samples.cuda()
-		labels = labels.long().cuda()
-		pred = model(samples)
-		trainloss = nlogloss(pred, labels)
-		trainloss.backward()
+                
 		"""
-		trues = labels == 1.
-		falses = labels == 0.
-	
-		if trues.sum() > 0:
-			truesamples = samples[trues].float()
-			truelabels = labels[trues].long()
-			truelabels = truelabels.cuda()
-			truesamples = truesamples.cuda()
+                optimizer.zero_grad()
+                images_all = torch.cat(images, 0).cuda()
+                targets = targets.cuda()
+                logits_all = model(images_all)
+                logits_clean, logits_aug1, logits_aug2 = torch.split(logits_all, images[0].size(0))
+                loss = F.cross_entropy(logits_clean, targets)
+                
+                p_clean, p_aug1, p_aug2 = F.softmax(
+                        logits_clean, dim = 1), F.softmax(
+                                logits_aug1, dim = 1), F.softmax(
+                                        logits_aug2, dim = 1)
 
-			truepred = model(truesamples)
-			#trainloss = compound_dice_loss(pred, labels, 'cuda')
-			truetrainloss = nlogloss(truepred, truelabels)
-			truetrainloss.backward()
-		
-		if falses.sum() > 0:
-			falsesamples = samples[falses].float()
-			falselabels = labels[falses].long()
-			falsesamples = falsesamples.cuda()
-			falselabels = falselabels.cuda()
-			falsepred = model(falsesamples)
-			falsetrainloss = nlogloss(falsepred, falselabels)
-			falsetrainloss.backward()
-		"""		
+                p_mixture = torch.clamp((p_clean + p_aug1 + p_aug2)/3., 1e-7, 1).log()
+                loss+= 12 * (F.kl_div(p_mixture, p_clean, reduction='batchmean') +
+                    F.kl_div(p_mixture, p_aug1, reduction='batchmean') +
+                    F.kl_div(p_mixture, p_aug2, reduction='batchmean')) / 3.
 
+                loss.backward()
 		optimizer.step()
-		
-		
-		samples = samples.cpu();del samples;
-		pred = pred.cpu();del pred;
-		labels = labels.cpu();del labels;
-		if 'truesamples' in dir():
-			truesamples = truesamples.cpu();del truesamples;
-			truelabels = truelabels.cpu();del truelabels;
-		
-		if 'falsesamples' in dir():
-			falsesamples = falsesamples.cpu();del falsesamples;
-			falselabels = falselabels.cpu();del falselabels;
-
-		pbar.update(trainbatchsize//2)
-
-
+                pbar.update(trainbatchsize)
+                """
+        """
 	model = model.eval()
 	#train_gt = torch.Tensor([]).int()
 	#train_pred = torch.Tensor([]).int()
@@ -287,9 +274,9 @@ for i in range(epochs):
 			os.system('rm cmpth_checkpoints/exp7/checkpoints/fold{}/*'.format(f))
 		savepath = 'cmpth_checkpoints/exp7/checkpoints/fold{}/'.format(f)+ 'fold{}_'.format(f) + datetime.now().strftime("%d_%m_%Y___%H_%M_%S")+'.pth'
 		torch.save(model, savepath)
-			
+        """			
 
-
+"""
 wpath = 'cmpth_checkpoints/exp7/logs/fold{}/'.format(f)+'trainlossrecord.npy'
 trainlossrecord = np.array(trainlossrecord)
 np.save(wpath, trainlossrecord)
@@ -301,3 +288,4 @@ np.save(wpath, vallossrecord)
 wpath = 'cmpth_checkpoints/exp7/logs/fold{}/'.format(f)+'valaccrecord.npy'
 valaccrecord = np.array(valaccrecord)
 np.save(wpath, valaccrecord)
+"""

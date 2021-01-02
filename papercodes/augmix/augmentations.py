@@ -53,11 +53,11 @@ def sample_level(n):
   return np.random.uniform(low=0.1, high=n)
 
 
-def autocontrast(pil_img, _):
+def autocontrast(pil_img):
   return ImageOps.autocontrast(pil_img)
 
 
-def equalize(pil_img, _):
+def equalize(pil_img):
   return ImageOps.equalize(pil_img)
 
 

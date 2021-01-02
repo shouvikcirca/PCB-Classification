@@ -64,4 +64,3 @@ values are higher.
 
 
 Not a lot of difference when using Adam Optimizer and using training method described in densenet paper(without using mentioned initialization)
->>>>>>> Stashed changes
