@@ -18,7 +18,7 @@ import numpy as np
 from PIL import Image, ImageOps, ImageEnhance
 
 # ImageNet code should change this value
-IMAGE_SIZE = 32
+IMAGE_SIZE = 256
 
 
 def int_parameter(level, maxval):
@@ -53,11 +53,11 @@ def sample_level(n):
   return np.random.uniform(low=0.1, high=n)
 
 
-def autocontrast(pil_img):
+def autocontrast(pil_img, level):
   return ImageOps.autocontrast(pil_img)
 
 
-def equalize(pil_img):
+def equalize(pil_img, level):
   return ImageOps.equalize(pil_img)
 
 
