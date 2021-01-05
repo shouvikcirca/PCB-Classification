@@ -64,3 +64,10 @@ values are higher.
 
 
 Not a lot of difference when using Adam Optimizer and using training method described in densenet paper(without using mentioned initialization)
+
+
+Softmax highlights the larger values while pushing the rest of the classes to very small values.
+If we want to know how much the other classea are to each other, this thing has to be avoided.
+
+If we make the values of the logits smaller before passing to softmax, the relative similarity can be retained.
+This will make the distribution smoother.
