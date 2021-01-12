@@ -71,3 +71,6 @@ If we want to know how much the other classea are to each other, this thing has 
 
 If we make the values of the logits smaller before passing to softmax, the relative similarity can be retained.
 This will make the distribution smoother.
+
+Train and val accuraciea re going upto 95% but test acc is stuck at 89%.
+Could be due to uncertainty introduced by labelling errors.
