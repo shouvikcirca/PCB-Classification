@@ -1,4 +1,4 @@
-# Imbalanced-Classification
+# PCB-Classification
 
 Tried 3fold validation using Densenet 121
 . High NonDefective Accuracy
