@@ -74,3 +74,8 @@ This will make the distribution smoother.
 
 Train and val accuraciea re going upto 95% but test acc is stuck at 89%.
 Could be due to uncertainty introduced by labelling errors.
+
+
+
+A larger vaaariant of resnext gave an insignificant accuracy again. But the increase in number of parameters 
+was significant. So there was no point training a larger model for the same performaance.
