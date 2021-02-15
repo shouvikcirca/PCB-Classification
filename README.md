@@ -76,6 +76,19 @@ Train and val accuraciea re going upto 95% but test acc is stuck at 89%.
 Could be due to uncertainty introduced by labelling errors.
 
 
+A larger variant of resnext gave an insignificant accuracy again. But the increase in number of parameters 
+was significant. So there was no point training a larger model for the same performaance.
 
+<<<<<<< Updated upstream
 A larger vaaariant of resnext gave an insignificant accuracy again. But the increase in number of parameters 
 was significant. So there was no point training a larger model for the same performaance.
+=======
+Disadvantages of Batch Normalization
+Paper: High Performance Large Scale Image Recognition Without Normalization
+
+1) Incurs memory overhead
+2) significantly increases the time required to calculate gradients in some networks
+3) Introduces a discrepancy between the model during training and inference
+4) Breaks the independence between training samples in the mini batch
+
+
