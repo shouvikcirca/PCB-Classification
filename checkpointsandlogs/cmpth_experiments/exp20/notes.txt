@@ -1,0 +1,2 @@
+Use Adam
+Batch size: 96
