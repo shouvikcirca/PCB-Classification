@@ -96,4 +96,11 @@ Tried out Largin Margin Softmax Loss with different values for m (hyperparameter
 
 
 
+Label Smoothing 
+Refer page 7 of "Rethinking the INception architecture for computer vision"
+
+
+Auxilliary Classifiers idea taken fro Inception_V1 paper
+
+
 
