@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    code{
+        background-color: darkgray;
+        line-height: 20px;
+        padding: 10px;
+        display: block;
+    }
+
+    code.blank {
+        background-color:white;
+        line-height: 50px;
+        padding: 20px;
+        display: block;
+    }
+    #sampletrainval
+    {
+        display: inline;
+        
+    }
+    #sampletest
+    {
+        display: inline;
+        float: inline-start;
+        
+    }
+    #samplepredict
+    {
+        display: inline;
+        float: inline-start;
+        
+    }
+</style>
+<body>
+    <h1>Directory Structures</h1>
+    <strong>True</strong> contains Defective samples and <strong>False</strong> contains Non Defective samples
+    <div id="sampletrainval">
+        <img style="height: 600px; width: 400px;" src="sampletrainvaldataset.png" alt="">
+    </div>
+    <div id="sampletest">
+        <img style="height: 300px; width: 300px;" src="sampletestdataset.png" alt="">
+    </div>
+    <div id="samplepredict">
+        <img style="height: 280px; width: 280px;" src="samplepredictdataset.png" alt="">
+    </div>
+
+
+<div>   
+    <h1>cmpt_progs</h1>
+    Activate environment
+    <code >
+        $ conda activate pytorch
+    </code>
+    Move to working directory
+    <code >
+        $ cd pcb_nitk/cmpt_pytorch
+    </code>
+    <h3>Arguments</h3>
+    <ul>
+        <li><em>--dir</em> :Path of dataset</li>
+        <li><em>--modelname</em> :Name to be assigned to trained model. Should not include extension. Model is stored in .pth format</li>
+        <li><em>--epochs</em> :Number of epochs to train for</li>
+        <li><em>--modelweight</em> :model weights to be used for testing or predicting. Should not include extension</li>
+        <li><em>--opdir</em> :Output directory for predictions. Make sure that directory does not already exist else prgram will throw error.</li>
+    </ul>
+
+  
+    
+
+
+
+    <h3>Training</h3>
+
+    <code >
+        $ python3 cmpt_exp14.py --dir ../sampletrainvaldataset --modelname abc --epochs 1000 
+    </code>
+    The model weight gets saved in the <em>checkpoints</em> directory
+    <code class = "blank">
+       
+    </code>
+    <h3>Testing</h3>
+    <code >
+        $ python3 cmpt_exp14_test.py --dir ../sampletestdataset --modelweight abc   
+    </code>
+    <code class = "blank">
+       
+    </code>
+    <h3>Prediction</h3>
+    <code >
+        $ python3 cmpt_exp14_predict.py --dir ../samplepredictdataset --modelweight abc --opdir op   
+    </code>
+    <code class = "blank">
+       
+    </code>
+    <h1>dilated_dense_progs</h1>
+    Activate environment
+    <code >
+        $ conda activate TK_GPU
+    </code>
+    Move to working directory
+    <code >
+        $ cd pcb_nitk/dilated_dense_progs
+    </code>
+    <h3>Arguments</h3>
+    <ul>
+        <li><em>--dir</em> :Path of dataset</li>
+        <li><em>--modelname</em> :Name to be assigned to trained model. Should not include extension. Model is stored in .h5 format</li>
+        <li><em>--epochs</em> :Number of epochs to train for</li>
+        <li><em>--modelweight</em> :model weights to be used for testing or predicting. Should not include extension</li>
+        <li><em>--opdir</em> :Output directory for predictions. Make sure that directory does not already exist else prgram will throw error.</li>
+    </ul>
+
+    <h3>Training</h3>
+    
+    <code >
+        $ python3 dilated_dense_train.py --dir ../sampletrainvaldataset --modelname abc --epochs 300    
+    </code>
+    The model weight gets saved in the <em>checkpoints</em> directory
+    <code class = "blank">
+       
+    </code>
+    <h3>Testing</h3>
+    <code >
+        $ python3 dilated_dense_test.py --dir ../sampletestdataset --modelweight abc   
+    </code>
+    <code class = "blank">
+       
+    </code>
+    <h3>Prediction</h3>
+    <code >
+        $ python3 dilated_dense_predict.py --dir ../samplepredictdataset --modelweight abc --opdir op   
+    </code>
+    <code class = "blank">
+       
+    </code>
+    <code class = "end">
+       
+    </code>
+</div>
+
+
+<h1>Example for use as a module</h1>
+<code>
+    from pcbnitk import cmptmodel, Model<br>
+    from PIL import Image as pil_image<br>
+    import os<br><br>
+    
+    model = cmptmodel(1,Model)<br>
+    
+    a = pil_image.open('../samplepredictdataset/4.tif')<br>
+    a = model.predict(a)<br>
+    print(a)<br>
+</code>
+<h3>Ouput</h3>
+<code>
+$ nondefective
+</code>
+<h3>Arguments</h3>
+<span style="color: red;">cmptmodel</span><br>
+First argument can take one of three values, 1, 2 and 3. The numbers indicate different weights
+
+<h3>Path for the module</h3>
+C:\\ Users\\ PixelLS\\ anaconda3\\ envs\\ pytorch\\ lib\\ site-packages
+
+</div>
+
+
+
+</body>
+</html>
