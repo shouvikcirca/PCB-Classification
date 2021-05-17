@@ -31,12 +31,12 @@ e = fig.add_subplot(gs[0,2])
 f = fig.add_subplot(gs[0,2])
 
 
-a.plot(fold1_1, label='resnext50_32x4d with T')
-b.plot(fold1_2, label = 'resnext50_32x4d without T')
-c.plot(fold2_1, label='resnext50_32x4d with T')
-d.plot(fold2_2, label = 'resnext50_32x4d without T')
-e.plot(fold3_1, label='resnext50_32x4d with T')
-f.plot(fold3_2, label = 'resnext50_32x4d without T')
+a.plot(fold1_1, label='with Imagenet initialization')
+b.plot(fold1_2, label = 'without Imagenet initialization')
+c.plot(fold2_1, label='with Imagenet initialization')
+d.plot(fold2_2, label = 'without Imagenet initialization')
+e.plot(fold3_1, label='with Imagenet initialization')
+f.plot(fold3_2, label = 'without Imagenet initialization')
 
 a.legend()
 c.legend()
